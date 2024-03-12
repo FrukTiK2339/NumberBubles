@@ -9,7 +9,7 @@ import UIKit
 
 fileprivate var cellReuseIdentifier = "BubleCollectionViewCellReuseIdentifier"
 
-class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIGestureRecognizerDelegate {
     
     //MARK: - Private
     private var collectionView: UICollectionView?
@@ -36,11 +36,14 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             return self.layout(for: section)
         }
         let collectionView = UICollectionView(frame: view.bounds,collectionViewLayout: layout)
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellReuseIdentifier)
+        collectionView.register(BubleCollectionViewCell.self, forCellWithReuseIdentifier: cellReuseIdentifier)
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.showsVerticalScrollIndicator = false
         view.addSubview(collectionView)
+        
+        let tapGesture = UIPanGestureRecognizer(target: self, action: #selector(handleTap))
+        collectionView.addGestureRecognizer(tapGesture)
         
         self.collectionView = collectionView
     }
@@ -69,6 +72,27 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         return sectionLayout
     }
     
+    //MARK: - Actions
+    @objc private func handleTap(gesture: UITapGestureRecognizer) {
+        switch gesture.state {
+        case .began:
+        case .ended, .cancelled:
+        default:
+        }
+        
+        
+        let point = gesture.location(in: self.collectionView)
+        if let indexPath = self.collectionView?.indexPathForItem(at: point),
+           let cell = self.collectionView?.cellForItem(at: indexPath) {
+            print("tap")
+        }
+    }
+    
+    //MARK: - UIGestureRecognizerDelegate
+    
+    
+    
+    //MARK: - UICollectionViewDelegate, UICollectionViewDataSource
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return bubleArray.count
     }
@@ -78,11 +102,17 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath)
-        cell.backgroundColor = .red
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath) as? BubleCollectionViewCell else {
+            return UICollectionViewCell()
+        }
+        cell.configure(with: bubleArray[indexPath.section][indexPath.row])
         return cell
     }
-
-
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("selected")
+    }
 }
+
+
 
