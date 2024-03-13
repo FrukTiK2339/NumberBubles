@@ -7,18 +7,21 @@
 
 import UIKit
 
-fileprivate var cellReuseIdentifier = "BubleCollectionViewCellReuseIdentifier"
+fileprivate var cellReuseIdentifier = "NumberCollectionViewCellReuseIdentifier"
 
-class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIGestureRecognizerDelegate {
+class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, NumberCollectionViewCellDelegate {
+
     
     //MARK: - Private
     private var collectionView: UICollectionView?
-    private var bubleArray = [[Int]]()
+    private var contentArray = [[Int]]()
+    private var timer: Timer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupData()
         setupCollectionView()
+        setupTimer()
     }
     
     private func setupData() {
@@ -27,7 +30,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             for _ in 1...Int.random(in: 10...15) {
                 cells.append(Int.random(in: 1..<100))
             }
-            bubleArray.append(cells)
+            contentArray.append(cells)
         }
     }
     
@@ -36,15 +39,11 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             return self.layout(for: section)
         }
         let collectionView = UICollectionView(frame: view.bounds,collectionViewLayout: layout)
-        collectionView.register(BubleCollectionViewCell.self, forCellWithReuseIdentifier: cellReuseIdentifier)
+        collectionView.register(NumberCollectionViewCell.self, forCellWithReuseIdentifier: cellReuseIdentifier)
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.showsVerticalScrollIndicator = false
         view.addSubview(collectionView)
-        
-        let tapGesture = UIPanGestureRecognizer(target: self, action: #selector(handleTap))
-        collectionView.addGestureRecognizer(tapGesture)
-        
         self.collectionView = collectionView
     }
     
@@ -72,45 +71,93 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         return sectionLayout
     }
     
-    //MARK: - Actions
-    @objc private func handleTap(gesture: UITapGestureRecognizer) {
-        switch gesture.state {
-        case .began:
-        case .ended, .cancelled:
-        default:
+    private func addMoreCells() {
+        for _ in 1...30 {
+            var cells = [Int]()
+            for _ in 1...Int.random(in: 10...15) {
+                cells.append(Int.random(in: 1..<100))
+            }
+            contentArray.append(cells)
         }
-        
-        
-        let point = gesture.location(in: self.collectionView)
-        if let indexPath = self.collectionView?.indexPathForItem(at: point),
-           let cell = self.collectionView?.cellForItem(at: indexPath) {
-            print("tap")
+        collectionView?.reloadData()
+    }
+    
+    //MARK: - Timer
+    private func setupTimer() {
+        if timer == nil {
+            timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
         }
     }
     
-    //MARK: - UIGestureRecognizerDelegate
+    @objc private func updateTimer() {
+        guard let visibleCellsIndexPaths = collectionView?.indexPathsForVisibleItems,
+              let randomIndexPath = visibleCellsIndexPaths.randomElement()
+        else {
+            return
+        }
+        
+        if let cell = collectionView?.cellForItem(at: randomIndexPath) as? NumberCollectionViewCell {
+            cell.configure(with: Int.random(in: 1..<100))
+        }
+        
+        
+    }
     
+    //MARK: - NumberCollectionViewCellDelegate (Animations)
+    func animateTouchBegan(with view: UIView) {
+        if nil != view.layer.animation(forKey: "began") {
+            view.layer.removeAnimation(forKey: "began")
+        }
+        
+        let sizeAnimation = CABasicAnimation(keyPath: "transform")
+        sizeAnimation.toValue = CATransform3DMakeScale(0.8, 0.8, 1)
+        sizeAnimation.duration = 0.2
+        sizeAnimation.autoreverses = false
+        sizeAnimation.fillMode = .forwards
+        sizeAnimation.isRemovedOnCompletion = false
+        view.layer.add(sizeAnimation, forKey: "began")
+    }
     
+    func animateTouchEnd(with view: UIView) {
+        if nil != view.layer.animation(forKey: "end") {
+            view.layer.removeAnimation(forKey: "end")
+        }
+        
+        let sizeAnimation = CABasicAnimation(keyPath: "transform")
+        sizeAnimation.toValue = CATransform3DMakeScale(1, 1, 1)
+        sizeAnimation.duration = 0.2
+        sizeAnimation.autoreverses = false
+        sizeAnimation.fillMode = .forwards
+        sizeAnimation.isRemovedOnCompletion = false
+        view.layer.add(sizeAnimation, forKey: "end")
+    }
+    
+    //MARK: - UIScrollViewDelegate
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard let collectionView = collectionView else { return }
+        let currentPosY = scrollView.contentOffset.y
+        let contentTriggerHeight = scrollView.contentSize.height - collectionView.frame.size.height - 150
+        if currentPosY > 0, contentTriggerHeight > 0, currentPosY >= contentTriggerHeight {
+            addMoreCells()
+        }
+    }
     
     //MARK: - UICollectionViewDelegate, UICollectionViewDataSource
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return bubleArray.count
+        return contentArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return bubleArray[section].count
+        return contentArray[section].count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath) as? BubleCollectionViewCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath) as? NumberCollectionViewCell else {
             return UICollectionViewCell()
         }
-        cell.configure(with: bubleArray[indexPath.section][indexPath.row])
+        cell.configure(with: contentArray[indexPath.section][indexPath.row])
+        cell.delegate = self
         return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("selected")
     }
 }
 

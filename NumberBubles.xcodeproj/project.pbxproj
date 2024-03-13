@@ -13,7 +13,7 @@
 		EF06F7632BA0677E00A70A16 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = EF06F7622BA0677E00A70A16 /* Base */; };
 		EF06F7652BA0678000A70A16 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF06F7642BA0678000A70A16 /* Assets.xcassets */; };
 		EF06F7682BA0678000A70A16 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = EF06F7672BA0678000A70A16 /* Base */; };
-		EF06F7702BA082C600A70A16 /* BubleCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF06F76F2BA082C600A70A16 /* BubleCollectionViewCell.swift */; };
+		EF165A712BA187AF00E5F816 /* NumberCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF165A702BA187AF00E5F816 /* NumberCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,7 +25,7 @@
 		EF06F7642BA0678000A70A16 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EF06F7672BA0678000A70A16 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EF06F7692BA0678000A70A16 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EF06F76F2BA082C600A70A16 /* BubleCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BubleCollectionViewCell.swift; path = ../../Movve/Movve/BubleCollectionViewCell.swift; sourceTree = "<group>"; };
+		EF165A702BA187AF00E5F816 /* NumberCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,7 +61,7 @@
 				EF06F75B2BA0677E00A70A16 /* AppDelegate.swift */,
 				EF06F75D2BA0677E00A70A16 /* SceneDelegate.swift */,
 				EF06F75F2BA0677E00A70A16 /* ViewController.swift */,
-				EF06F76F2BA082C600A70A16 /* BubleCollectionViewCell.swift */,
+				EF165A702BA187AF00E5F816 /* NumberCollectionViewCell.swift */,
 				EF06F7612BA0677E00A70A16 /* Main.storyboard */,
 				EF06F7642BA0678000A70A16 /* Assets.xcassets */,
 				EF06F7662BA0678000A70A16 /* LaunchScreen.storyboard */,
@@ -142,8 +142,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				EF06F7602BA0677E00A70A16 /* ViewController.swift in Sources */,
-				EF06F7702BA082C600A70A16 /* BubleCollectionViewCell.swift in Sources */,
 				EF06F75C2BA0677E00A70A16 /* AppDelegate.swift in Sources */,
+				EF165A712BA187AF00E5F816 /* NumberCollectionViewCell.swift in Sources */,
 				EF06F75E2BA0677E00A70A16 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
