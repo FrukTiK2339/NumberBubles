@@ -52,7 +52,6 @@ class NumberCollectionViewCell: UICollectionViewCell {
         super.touchesBegan(touches, with: event)
         guard let touch: UITouch = touches.first, let touchedView = touch.view else { return }
         delegate?.animateTouchBegan(with: touchedView)
-        print("began")
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
